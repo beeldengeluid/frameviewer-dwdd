@@ -6,7 +6,7 @@
         :key="framePath"
         :alt="'frame' + index"
         :src="require(`@/assets/${framePath}`)"
-        :style="{ width: slitWidth + 'px' }"
+        :style="{ width: slitWidthComputed + 'px' }"
         class="h4 object-fit"
       />
     </div>
@@ -33,13 +33,20 @@ export default {
   },
   computed: {
     framePathsComputed() {
-      if (this.framePaths) {
-        return this.framePaths;
-      } else {
-        return [...Array(this.frameMaxIndex).keys()].map(
-          i => `${this.frameDir}/${this.framePrefix}${i}.jpg`
-        );
-      }
+      return this.frameDir ? this.framePathsFromDir : this.framePaths;
+    },
+    framePathsFromDir() {
+      return [...Array(this.frameMaxIndex).keys()].map(
+        i => `${this.frameDir}/${this.framePrefix}${i}.jpg`
+      );
+    },
+    slitWidthRelative() {
+      let clientWidth =
+        document.body.clientWidth || document.documentElement.clientWidth;
+      return clientWidth / this.frameMaxIndex;
+    },
+    slitWidthComputed() {
+      return this.frameDir ? this.slitWidthRelative : this.slitWidth;
     }
   }
 };

@@ -27,7 +27,7 @@ export default {
     return {
       frameDir1: "2005_150509@program-sequential",
       framePrefix1: "2005_150509@program-",
-      frameMaxIndex1: 2595,
+      frameMaxIndex1: 115,
       framePaths1: [
         "2005_150509@shot/keyframe_13.jpg",
         "2005_150509@shot/keyframe_32.jpg",
