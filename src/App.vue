@@ -5,8 +5,8 @@
     <h2>2005_150509@program</h2>
     <FrameViewer
       :frameDir="frameDir1"
-      :frameMaxIndex="frameMaxIndex1"
       :framePrefix="framePrefix1"
+      :frameMaxIndex="frameMaxIndex1"
     />
 
     <!-- <h2>2005</h2>
@@ -25,9 +25,9 @@ export default {
   name: "App",
   data: function() {
     return {
-      frameDir1: "2005_150509@program-sequential",
-      framePrefix1: "2005_150509@program-",
-      frameMaxIndex1: 115,
+      frameDir1: "mvn",
+      framePrefix1: "mvn-",
+      frameMaxIndex1: 114,
       framePaths1: [
         "2005_150509@shot/keyframe_13.jpg",
         "2005_150509@shot/keyframe_32.jpg",
