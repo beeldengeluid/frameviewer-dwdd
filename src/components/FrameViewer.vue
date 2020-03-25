@@ -104,9 +104,8 @@ export default {
   top: 0;
   transform: translateY(-100%) translateY(-7px);
   transition: opacity 0.2s, z-index 0.2s;
-  /*width: 160px;*/
-  height: 120px;
   background-size: cover;
+  background-position: center;
   border: solid rgba(28, 28, 28, 0.9) 3px;
   border-radius: 3px;
   z-index: -1;
