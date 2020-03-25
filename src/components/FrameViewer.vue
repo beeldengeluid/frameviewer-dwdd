@@ -10,8 +10,10 @@
         class="h4 object-fit"
       />
     </div>
-    <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
-    <input type="number" v-model="slitWidth" />
+    <div v-if="framePaths">
+      <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
+      <input type="number" v-model="slitWidth" />
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,7 @@ export default {
   name: "FrameViewer",
   data: function() {
     return {
-      slitWidth: 1
+      slitWidth: 30
     };
   },
   props: {
