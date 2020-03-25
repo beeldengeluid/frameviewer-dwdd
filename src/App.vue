@@ -7,6 +7,8 @@
       :frameDir="frameDir1"
       :framePrefix="framePrefix1"
       :frameMaxIndex="frameMaxIndex1"
+      :thumbnailWidth="160"
+      :thumbnailAspectRatio="4/3"
     />
 
     <!-- <h2>via framePaths prop</h2> -->

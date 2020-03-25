@@ -1,24 +1,28 @@
 <template>
-  <div class="relative">
+  <div class="frameviewer">
     <div
-      :style="{
-        'background-image': `url(${framesComputed[activeFrame]})`,
-        'margin-left': `${thumbnailMargin}px`
-      }"
-      class="frameviewer-thumbnail"
-      ref="frameviewerThumbnail"
-    ></div>
-    <div ref="frameviewerFrames" @mouseleave="activeFrame = 0">
+      class="frameviewer-frames"
+      ref="frameviewerFrames"
+    >
       <img
+        class="frameviewer-frame"
         v-for="(frame, index) in framesComputed"
         :key="frame"
         :alt="'frame' + index"
         :src="frame"
         :style="{ width: slitWidthComputed + 'px' }"
         @mouseover="activeFrame = index"
-        class="h4 object-fit"
       />
     </div>
+    <div
+      class="frameviewer-thumbnail"
+      :style="{
+        'background-image': `url(${framesComputed[activeFrame]})`,
+        'margin-left': `${thumbnailMargin}px`,
+        'width': `${thumbnailWidth}px`,
+        'height': `${thumbnailHeight}px`
+      }"
+    ></div>
     <span>{{ activeFrame }}</span>
     <div v-if="framePaths">
       <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
@@ -28,15 +32,12 @@
 </template>
 
 <script>
-import "../../node_modules/tachyons/css/tachyons.min.css";
-
 export default {
   name: "FrameViewer",
   data: function() {
     return {
       slitWidth: 30,
       activeFrame: 0,
-      thumbnailWidth: 160,
       thumbnailMargin: 0
     };
   },
@@ -44,7 +45,9 @@ export default {
     framePaths: { type: Array },
     frameDir: { type: String },
     framePrefix: { type: String },
-    frameMaxIndex: { type: Number }
+    frameMaxIndex: { type: Number },
+    thumbnailWidth: { type: Number },
+    thumbnailAspectRatio: { type: Number }
   },
   computed: {
     framePathsComputed() {
@@ -68,6 +71,9 @@ export default {
     },
     slitWidthComputed() {
       return this.frameDir ? this.slitWidthRelative : this.slitWidth;
+    },
+    thumbnailHeight() {
+      return this.thumbnailWidth / this.thumbnailAspectRatio;
     }
   },
   watch: {
@@ -90,12 +96,28 @@ export default {
 </script>
 
 <style scoped>
-.object-fit {
-  object-fit: cover;
+.frameviewer {
+  position: relative;
 }
-.frameviewer-thumbnail {
-  width: 160px;
+.frameviewer .frameviewer-thumbnail {
+  position: absolute;
+  top: 0;
+  transform: translateY(-100%) translateY(-7px);
+  transition: opacity 0.2s, z-index 0.2s;
+  /*width: 160px;*/
   height: 120px;
   background-size: cover;
+  border: solid rgba(28, 28, 28, 0.9) 3px;
+  border-radius: 3px;
+  z-index: -1;
+  opacity: 0;
+}
+.frameviewer .frameviewer-frame {
+  height: 100px;
+  object-fit: cover;
+}
+.frameviewer .frameviewer-frames:hover + .frameviewer-thumbnail {
+  z-index: 999;
+  opacity: 1;
 }
 </style>
