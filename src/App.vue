@@ -9,8 +9,8 @@
       :frameMaxIndex="frameMaxIndex1"
     />
 
-    <h2>via framePaths prop</h2>
-    <FrameViewer :framePaths="framePaths1"/>
+    <!-- <h2>via framePaths prop</h2> -->
+    <!-- <FrameViewer :framePaths="framePaths1"/> -->
   </div>
 </template>
 

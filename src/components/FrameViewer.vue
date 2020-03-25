@@ -1,15 +1,25 @@
 <template>
-  <div>
-    <div>
+  <div class="relative">
+    <div
+      :style="{
+        'background-image': `url(${framesComputed[activeFrame]})`,
+        'margin-left': `${thumbnailMargin}px`
+      }"
+      class="frameviewer-thumbnail"
+      ref="frameviewerThumbnail"
+    ></div>
+    <div ref="frameviewerFrames" @mouseleave="activeFrame = 0">
       <img
-        v-for="(framePath, index) in framePathsComputed"
-        :key="framePath"
+        v-for="(frame, index) in framesComputed"
+        :key="frame"
         :alt="'frame' + index"
-        :src="require(`@/assets/${framePath}`)"
+        :src="frame"
         :style="{ width: slitWidthComputed + 'px' }"
+        @mouseover="activeFrame = index"
         class="h4 object-fit"
       />
     </div>
+    <span>{{ activeFrame }}</span>
     <div v-if="framePaths">
       <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
       <input type="number" v-model="slitWidth" />
@@ -24,7 +34,10 @@ export default {
   name: "FrameViewer",
   data: function() {
     return {
-      slitWidth: 30
+      slitWidth: 30,
+      activeFrame: 0,
+      thumbnailWidth: 160,
+      thumbnailMargin: 0
     };
   },
   props: {
@@ -42,21 +55,47 @@ export default {
         i => `${this.frameDir}/${this.framePrefix}${i}.jpg`
       );
     },
+    framesComputed() {
+      return [...Array(this.frameMaxIndex).keys()].map(i =>
+        require(`@/assets/${this.frameDir}/${this.framePrefix}${i}.jpg`)
+      );
+    },
+    clientWidth() {
+      return document.body.clientWidth || document.documentElement.clientWidth;
+    },
     slitWidthRelative() {
-      let clientWidth =
-        document.body.clientWidth || document.documentElement.clientWidth;
-      return clientWidth / this.frameMaxIndex;
+      return this.clientWidth / this.frameMaxIndex;
     },
     slitWidthComputed() {
       return this.frameDir ? this.slitWidthRelative : this.slitWidth;
+    }
+  },
+  watch: {
+    activeFrame() {
+      this.thumbnailMargin = this.calcThumbnailMargin();
+    }
+  },
+  methods: {
+    calcThumbnailMargin() {
+      let progress = this.activeFrame / this.frameMaxIndex;
+      let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
+      let x = progress * framesWidth;
+      return Math.min(
+        Math.max(0, x - this.thumbnailWidth / 2),
+        framesWidth - this.thumbnailWidth
+      );
     }
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .object-fit {
   object-fit: cover;
+}
+.frameviewer-thumbnail {
+  width: 160px;
+  height: 120px;
+  background-size: cover;
 }
 </style>
