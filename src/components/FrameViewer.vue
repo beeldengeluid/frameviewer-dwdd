@@ -80,7 +80,9 @@ export default {
     },
     setThumbnail(offsetX) {
       let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
-      let frameIndex = Math.round((offsetX / framesWidth) * this.frames.length);
+      let frameIndex = Math.round(
+        (offsetX / framesWidth) * (this.frames.length - 1)
+      );
       this.thumbnailSrc = this.frames[frameIndex];
     },
     moveThumbnail(offsetX) {
