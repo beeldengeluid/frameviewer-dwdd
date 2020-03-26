@@ -15,7 +15,7 @@
           :key="frame"
           :alt="'frame' + index"
           :src="frame"
-          :style="{ width: slitWidth + 'px' }"
+          :style="{ width: slitWidth }"
           @mouseover="activeFrame = index"
         />
       </div>
@@ -54,12 +54,12 @@ export default {
       return document.body.clientWidth || document.documentElement.clientWidth;
     },
     slitWidthRelative() {
-      return this.clientWidth / this.frames.length;
+      return 100 / this.frames.length;
     },
     slitWidth() {
       return this.slitWidthCustom
-        ? this.slitWidthCustom
-        : this.slitWidthRelative;
+        ? this.slitWidthCustom + "px"
+        : this.slitWidthRelative + "%";
     },
     thumbnailHeight() {
       return this.thumbnailWidth / this.thumbnailAspectRatio;
