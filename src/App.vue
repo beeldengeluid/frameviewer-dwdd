@@ -8,7 +8,6 @@
       :frames="framesFromDir"
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
-      :relativeWidth="true"
     />
 
     <h2>individual frames full width</h2>
@@ -16,7 +15,6 @@
       :frames="framesFromDir"
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
-      :relativeWidth="true"
     />
 
     <h2>individual frames custom width</h2>
@@ -24,8 +22,18 @@
       :frames="framesFromPaths"
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
-      :relativeWidth="false"
+      :slitWidthCustom="slitWidthCustom"
     />
+    <div>
+      <input
+        type="range"
+        min="2"
+        max="170"
+        step="1"
+        v-model="slitWidthCustom"
+      />
+      <input type="number" v-model="slitWidthCustom" />
+    </div>
   </div>
 </template>
 
@@ -54,7 +62,8 @@ export default {
         require(`@/assets/mvn/mvn-7.jpg`),
         require(`@/assets/mvn/mvn-8.jpg`),
         require(`@/assets/mvn/mvn-9.jpg`)
-      ]
+      ],
+      slitWidthCustom: 50
     };
   },
   computed: {

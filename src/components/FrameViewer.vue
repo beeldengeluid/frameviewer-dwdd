@@ -29,17 +29,6 @@
         height: `${thumbnailHeight}px`
       }"
     ></div>
-    <div v-if="!relativeWidth">
-      <div>{{ activeFrame }}</div>
-      <input
-        type="range"
-        min="2"
-        max="170"
-        step="1"
-        v-model="slitWidthCustom"
-      />
-      <input type="number" v-model="slitWidthCustom" />
-    </div>
   </div>
 </template>
 
@@ -48,18 +37,17 @@ export default {
   name: "FrameViewer",
   data: function() {
     return {
-      slitWidthCustom: 50,
       activeFrame: undefined,
       thumbnailMargin: undefined,
       thumbnailSrc: undefined
     };
   },
   props: {
-    frameLine: { type: String },
-    frames: { type: Array },
-    thumbnailWidth: { type: Number },
-    thumbnailAspectRatio: { type: Number },
-    relativeWidth: { type: Boolean }
+    frameLine: { type: String, required: false },
+    frames: { type: Array, required: true },
+    thumbnailWidth: { type: Number, required: true },
+    thumbnailAspectRatio: { type: Number, default: 4 / 3 },
+    slitWidthCustom: { type: undefined, required: false }
   },
   computed: {
     clientWidth() {
@@ -69,7 +57,9 @@ export default {
       return this.clientWidth / this.frames.length;
     },
     slitWidth() {
-      return this.relativeWidth ? this.slitWidthRelative : this.slitWidthCustom;
+      return this.slitWidthCustom
+        ? this.slitWidthCustom
+        : this.slitWidthRelative;
     },
     thumbnailHeight() {
       return this.thumbnailWidth / this.thumbnailAspectRatio;
@@ -77,10 +67,12 @@ export default {
   },
   watch: {
     activeFrame() {
+      // set Thumbnail
+      this.thumbnailSrc = this.frames[this.activeFrame];
+      // move Thumbnail
       let progress = this.activeFrame / this.frames.length;
       let x = progress * this.$refs.frameviewerFrames.offsetWidth;
       this.moveThumbnail(x);
-      this.thumbnailSrc = this.frames[this.activeFrame];
     }
   },
   methods: {
