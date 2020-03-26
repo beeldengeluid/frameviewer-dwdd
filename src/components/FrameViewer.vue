@@ -29,7 +29,9 @@
         width: `${thumbnailWidth}px`,
         height: `${thumbnailHeight}px`
       }"
-    ></div>
+    >
+      <div class="frameviewer-date">{{ thumbnailDate }}</div>
+    </div>
   </div>
 </template>
 
@@ -40,12 +42,14 @@ export default {
     return {
       activeFrame: undefined,
       thumbnailMargin: undefined,
-      thumbnailSrc: undefined
+      thumbnailSrc: undefined,
+      thumbnailDate: undefined
     };
   },
   props: {
     frameLine: { type: String, required: false },
     frames: { type: Array, required: true },
+    dates: { type: Array, required: false },
     thumbnailWidth: { type: Number, required: true },
     thumbnailAspectRatio: { type: Number, default: 4 / 3 },
     slitWidthCustom: { type: undefined, required: false }
@@ -66,7 +70,9 @@ export default {
   watch: {
     activeFrame() {
       // set Thumbnail
-      this.thumbnailSrc = this.frames[this.activeFrame];
+      // this.thumbnailSrc = this.frames[this.activeFrame];
+      this.setThumbnailSrc(this.activeFrame);
+      this.setThumbnailDate(this.activeFrame);
       // move Thumbnail
       let progress = this.activeFrame / this.frames.length;
       let x = progress * this.$refs.frameviewerFrames.offsetWidth;
@@ -74,16 +80,23 @@ export default {
     }
   },
   methods: {
+    getActiveIndex(offsetX) {
+      let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
+      return Math.round((offsetX / framesWidth) * (this.frames.length - 1));
+    },
     onFrameLineMouseMove(event) {
-      this.setThumbnail(event.offsetX);
+      let activeIndex = this.getActiveIndex(event.offsetX);
+      this.setThumbnailSrc(activeIndex);
+      this.setThumbnailDate(activeIndex);
       this.moveThumbnail(event.offsetX);
     },
-    setThumbnail(offsetX) {
-      let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
-      let frameIndex = Math.round(
-        (offsetX / framesWidth) * (this.frames.length - 1)
-      );
-      this.thumbnailSrc = this.frames[frameIndex];
+    setThumbnailSrc(activeIndex) {
+      this.thumbnailSrc = this.frames[activeIndex];
+    },
+    setThumbnailDate(activeIndex) {
+      if (this.dates) {
+        this.thumbnailDate = this.dates[activeIndex];
+      }
     },
     moveThumbnail(offsetX) {
       let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
@@ -112,6 +125,17 @@ export default {
   border-radius: 3px;
   z-index: -1;
   opacity: 0;
+  display: flex;
+  justify-content: center;
+}
+.frameviewer .frameviewer-thumbnail .frameviewer-date {
+  color: #eee;
+  background: rgba(28, 28, 28, 0.9);
+  font-size: 0.9rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  position: absolute;
+  bottom: 0;
 }
 .frameviewer .frameviewer-frame {
   height: 100px;
