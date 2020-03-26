@@ -2,7 +2,16 @@
   <div id="app">
     <h1>Frame Viewer</h1>
 
-    <h2>frames from dir</h2>
+    <h2>single frameLine image</h2>
+    <FrameViewer
+      :frameLine="frameLine"
+      :frames="framesFromDir"
+      :thumbnailWidth="160"
+      :thumbnailAspectRatio="4 / 3"
+      :relativeWidth="true"
+    />
+
+    <h2>individual frames full width</h2>
     <FrameViewer
       :frames="framesFromDir"
       :thumbnailWidth="160"
@@ -10,7 +19,7 @@
       :relativeWidth="true"
     />
 
-    <h2>frames from paths</h2>
+    <h2>individual frames custom width</h2>
     <FrameViewer
       :frames="framesFromPaths"
       :thumbnailWidth="160"
@@ -33,6 +42,7 @@ export default {
       frameDir: "mvn",
       framePrefix: "mvn-",
       frameMaxIndex: 114,
+      frameLine: require(`@/assets/mvn/frameline.jpg`),
       framesFromPaths: [
         require(`@/assets/mvn/mvn-0.jpg`),
         require(`@/assets/mvn/mvn-1.jpg`),

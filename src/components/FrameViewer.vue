@@ -1,20 +1,29 @@
 <template>
   <div class="frameviewer">
     <div class="frameviewer-frames" ref="frameviewerFrames">
-      <img
-        class="frameviewer-frame"
-        v-for="(frame, index) in frames"
-        :key="frame"
-        :alt="'frame' + index"
-        :src="frame"
-        :style="{ width: slitWidthComputed + 'px' }"
-        @mouseover="activeFrame = index"
-      />
+      <div v-if="frameLine">
+        <img
+          :src="frameLine"
+          @mousemove="onFrameLineMouseMove"
+          alt="frameline"
+        />
+      </div>
+      <div v-else>
+        <img
+          class="frameviewer-frame"
+          v-for="(frame, index) in frames"
+          :key="frame"
+          :alt="'frame' + index"
+          :src="frame"
+          :style="{ width: slitWidth + 'px' }"
+          @mouseover="activeFrame = index"
+        />
+      </div>
     </div>
     <div
       class="frameviewer-thumbnail"
       :style="{
-        'background-image': `url(${frames[activeFrame]})`,
+        'background-image': `url(${thumbnailSrc})`,
         'margin-left': `${thumbnailMargin}px`,
         width: `${thumbnailWidth}px`,
         height: `${thumbnailHeight}px`
@@ -22,8 +31,14 @@
     ></div>
     <div v-if="!relativeWidth">
       <div>{{ activeFrame }}</div>
-      <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
-      <input type="number" v-model="slitWidth" />
+      <input
+        type="range"
+        min="2"
+        max="170"
+        step="1"
+        v-model="slitWidthCustom"
+      />
+      <input type="number" v-model="slitWidthCustom" />
     </div>
   </div>
 </template>
@@ -33,12 +48,14 @@ export default {
   name: "FrameViewer",
   data: function() {
     return {
-      slitWidth: 30,
+      slitWidthCustom: 50,
       activeFrame: undefined,
-      thumbnailMargin: undefined
+      thumbnailMargin: undefined,
+      thumbnailSrc: undefined
     };
   },
   props: {
+    frameLine: { type: String },
     frames: { type: Array },
     thumbnailWidth: { type: Number },
     thumbnailAspectRatio: { type: Number },
@@ -51,8 +68,8 @@ export default {
     slitWidthRelative() {
       return this.clientWidth / this.frames.length;
     },
-    slitWidthComputed() {
-      return this.relativeWidth ? this.slitWidthRelative : this.slitWidth;
+    slitWidth() {
+      return this.relativeWidth ? this.slitWidthRelative : this.slitWidthCustom;
     },
     thumbnailHeight() {
       return this.thumbnailWidth / this.thumbnailAspectRatio;
@@ -60,16 +77,26 @@ export default {
   },
   watch: {
     activeFrame() {
-      this.thumbnailMargin = this.calcThumbnailMargin();
+      let progress = this.activeFrame / this.frames.length;
+      let x = progress * this.$refs.frameviewerFrames.offsetWidth;
+      this.moveThumbnail(x);
+      this.thumbnailSrc = this.frames[this.activeFrame];
     }
   },
   methods: {
-    calcThumbnailMargin() {
-      let progress = this.activeFrame / this.frames.length;
+    onFrameLineMouseMove(event) {
+      this.setThumbnail(event.offsetX);
+      this.moveThumbnail(event.offsetX);
+    },
+    setThumbnail(offsetX) {
       let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
-      let x = progress * framesWidth;
-      return Math.min(
-        Math.max(0, x - this.thumbnailWidth / 2),
+      let frameIndex = Math.round((offsetX / framesWidth) * this.frames.length);
+      this.thumbnailSrc = this.frames[frameIndex];
+    },
+    moveThumbnail(offsetX) {
+      let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
+      this.thumbnailMargin = Math.min(
+        Math.max(0, offsetX - this.thumbnailWidth / 2),
         framesWidth - this.thumbnailWidth
       );
     }
