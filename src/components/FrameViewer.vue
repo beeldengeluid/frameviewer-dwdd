@@ -80,6 +80,7 @@ export default {
 <style scoped>
 .frameviewer {
   position: relative;
+  display: inline-block;
 }
 .frameviewer .frameviewer-thumbnail {
   position: absolute;
