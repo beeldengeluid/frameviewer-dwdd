@@ -2,7 +2,7 @@
   <div id="app">
     <h1>Frame Viewer</h1>
 
-    <h2>single frameLine image</h2>
+    <h2>Single frameLine image</h2>
     <FrameViewer
       :frameLine="frameLine"
       :frames="framesFromDir"
@@ -10,14 +10,14 @@
       :thumbnailAspectRatio="4 / 3"
     />
 
-    <h2>individual frames full width</h2>
+    <h2>Individual frames - responsive full width</h2>
     <FrameViewer
       :frames="framesFromDir"
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
     />
 
-    <h2>individual frames custom width</h2>
+    <h2>Individual frames - custom fixed width</h2>
     <FrameViewer
       :frames="framesFromPaths"
       :thumbnailWidth="160"

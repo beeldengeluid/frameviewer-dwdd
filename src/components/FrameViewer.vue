@@ -3,6 +3,7 @@
     <div class="frameviewer-frames" ref="frameviewerFrames">
       <div v-if="frameLine">
         <img
+          class="frameviewer-frameline"
           :src="frameLine"
           @mousemove="onFrameLineMouseMove"
           alt="frameline"
@@ -50,9 +51,6 @@ export default {
     slitWidthCustom: { type: undefined, required: false }
   },
   computed: {
-    clientWidth() {
-      return document.body.clientWidth || document.documentElement.clientWidth;
-    },
     slitWidthRelative() {
       return 100 / this.frames.length;
     },
@@ -116,6 +114,9 @@ export default {
 .frameviewer .frameviewer-frame {
   height: 100px;
   object-fit: cover;
+}
+.frameviewer img.frameviewer-frameline {
+  width: 100%;
 }
 .frameviewer .frameviewer-frames:hover + .frameviewer-thumbnail {
   z-index: 999;
