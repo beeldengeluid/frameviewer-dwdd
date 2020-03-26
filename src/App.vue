@@ -1,18 +1,22 @@
 <template>
   <div id="app">
     <h1>Frame Viewer</h1>
-    <!-- <FrameViewer :framePaths="framePathsEpisode"/> -->
-    <h2>via frameDir prop</h2>
+
+    <h2>frames from dir</h2>
     <FrameViewer
-      :frameDir="frameDir1"
-      :framePrefix="framePrefix1"
-      :frameMaxIndex="frameMaxIndex1"
+      :frames="framesFromDir"
       :thumbnailWidth="160"
-      :thumbnailAspectRatio="4/3"
+      :thumbnailAspectRatio="4 / 3"
+      :relativeWidth="true"
     />
 
-    <!-- <h2>via framePaths prop</h2> -->
-    <!-- <FrameViewer :framePaths="framePaths1"/> -->
+    <h2>frames from paths</h2>
+    <FrameViewer
+      :frames="framesFromPaths"
+      :thumbnailWidth="160"
+      :thumbnailAspectRatio="4 / 3"
+      :relativeWidth="false"
+    />
   </div>
 </template>
 
@@ -21,27 +25,34 @@ import FrameViewer from "./components/FrameViewer.vue";
 
 export default {
   name: "App",
+  components: {
+    FrameViewer
+  },
   data: function() {
     return {
-      frameDir1: "mvn",
-      framePrefix1: "mvn-",
-      frameMaxIndex1: 114,
-      framePaths1: [
-        "mvn/mvn-0.jpg",
-        "mvn/mvn-1.jpg",
-        "mvn/mvn-2.jpg",
-        "mvn/mvn-3.jpg",
-        "mvn/mvn-4.jpg",
-        "mvn/mvn-5.jpg",
-        "mvn/mvn-6.jpg",
-        "mvn/mvn-7.jpg",
-        "mvn/mvn-8.jpg",
-        "mvn/mvn-9.jpg"
+      frameDir: "mvn",
+      framePrefix: "mvn-",
+      frameMaxIndex: 114,
+      framesFromPaths: [
+        require(`@/assets/mvn/mvn-0.jpg`),
+        require(`@/assets/mvn/mvn-1.jpg`),
+        require(`@/assets/mvn/mvn-2.jpg`),
+        require(`@/assets/mvn/mvn-3.jpg`),
+        require(`@/assets/mvn/mvn-4.jpg`),
+        require(`@/assets/mvn/mvn-5.jpg`),
+        require(`@/assets/mvn/mvn-6.jpg`),
+        require(`@/assets/mvn/mvn-7.jpg`),
+        require(`@/assets/mvn/mvn-8.jpg`),
+        require(`@/assets/mvn/mvn-9.jpg`)
       ]
     };
   },
-  components: {
-    FrameViewer
+  computed: {
+    framesFromDir() {
+      return [...Array(this.frameMaxIndex).keys()].map(i =>
+        require(`@/assets/${this.frameDir}/${this.framePrefix}${i}.jpg`)
+      );
+    }
   }
 };
 </script>

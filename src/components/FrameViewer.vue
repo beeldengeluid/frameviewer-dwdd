@@ -1,12 +1,9 @@
 <template>
   <div class="frameviewer">
-    <div
-      class="frameviewer-frames"
-      ref="frameviewerFrames"
-    >
+    <div class="frameviewer-frames" ref="frameviewerFrames">
       <img
         class="frameviewer-frame"
-        v-for="(frame, index) in framesComputed"
+        v-for="(frame, index) in frames"
         :key="frame"
         :alt="'frame' + index"
         :src="frame"
@@ -17,14 +14,14 @@
     <div
       class="frameviewer-thumbnail"
       :style="{
-        'background-image': `url(${framesComputed[activeFrame]})`,
+        'background-image': `url(${frames[activeFrame]})`,
         'margin-left': `${thumbnailMargin}px`,
-        'width': `${thumbnailWidth}px`,
-        'height': `${thumbnailHeight}px`
+        width: `${thumbnailWidth}px`,
+        height: `${thumbnailHeight}px`
       }"
     ></div>
-    <span>{{ activeFrame }}</span>
-    <div v-if="framePaths">
+    <div v-if="!relativeWidth">
+      <div>{{ activeFrame }}</div>
       <input type="range" min="2" max="170" step="1" v-model="slitWidth" />
       <input type="number" v-model="slitWidth" />
     </div>
@@ -37,40 +34,25 @@ export default {
   data: function() {
     return {
       slitWidth: 30,
-      activeFrame: 0,
-      thumbnailMargin: 0
+      activeFrame: undefined,
+      thumbnailMargin: undefined
     };
   },
   props: {
-    framePaths: { type: Array },
-    frameDir: { type: String },
-    framePrefix: { type: String },
-    frameMaxIndex: { type: Number },
+    frames: { type: Array },
     thumbnailWidth: { type: Number },
-    thumbnailAspectRatio: { type: Number }
+    thumbnailAspectRatio: { type: Number },
+    relativeWidth: { type: Boolean }
   },
   computed: {
-    framePathsComputed() {
-      return this.frameDir ? this.framePathsFromDir : this.framePaths;
-    },
-    framePathsFromDir() {
-      return [...Array(this.frameMaxIndex).keys()].map(
-        i => `${this.frameDir}/${this.framePrefix}${i}.jpg`
-      );
-    },
-    framesComputed() {
-      return [...Array(this.frameMaxIndex).keys()].map(i =>
-        require(`@/assets/${this.frameDir}/${this.framePrefix}${i}.jpg`)
-      );
-    },
     clientWidth() {
       return document.body.clientWidth || document.documentElement.clientWidth;
     },
     slitWidthRelative() {
-      return this.clientWidth / this.frameMaxIndex;
+      return this.clientWidth / this.frames.length;
     },
     slitWidthComputed() {
-      return this.frameDir ? this.slitWidthRelative : this.slitWidth;
+      return this.relativeWidth ? this.slitWidthRelative : this.slitWidth;
     },
     thumbnailHeight() {
       return this.thumbnailWidth / this.thumbnailAspectRatio;
@@ -83,7 +65,7 @@ export default {
   },
   methods: {
     calcThumbnailMargin() {
-      let progress = this.activeFrame / this.frameMaxIndex;
+      let progress = this.activeFrame / this.frames.length;
       let framesWidth = this.$refs.frameviewerFrames.offsetWidth;
       let x = progress * framesWidth;
       return Math.min(
