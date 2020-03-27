@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <h1>Frame Viewer</h1>
-
-    <h2>Single frameLine image</h2>
     <FrameViewer
       :frameLine="frameLine"
       :frames="frames"
@@ -10,33 +7,6 @@
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
     />
-
-    <h2>Individual frames - responsive full width</h2>
-    <FrameViewer
-      :frames="frames"
-      :dates="dates"
-      :thumbnailWidth="160"
-      :thumbnailAspectRatio="4 / 3"
-    />
-
-    <h2>Individual frames - custom fixed width</h2>
-    <FrameViewer
-      :frames="frames"
-      :dates="dates"
-      :thumbnailWidth="160"
-      :thumbnailAspectRatio="4 / 3"
-      :slitWidthCustom="slitWidthCustom"
-    />
-    <div>
-      <input
-        type="range"
-        min="2"
-        max="170"
-        step="1"
-        v-model="slitWidthCustom"
-      />
-      <input type="number" v-model="slitWidthCustom" />
-    </div>
   </div>
 </template>
 
@@ -186,12 +156,16 @@ export default {
 </script>
 
 <style>
+body,
+html {
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: calc(7px + 126px); /*thumbnailSpacing + thumbnailHeight*/
 }
 </style>
