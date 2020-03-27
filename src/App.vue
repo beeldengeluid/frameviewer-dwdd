@@ -3,7 +3,7 @@
     <FrameViewer
       :frameLine="frameLine"
       :frames="frames"
-      :dates="dates"
+      :labels="labels"
       :thumbnailWidth="160"
       :thumbnailAspectRatio="4 / 3"
     />
@@ -148,8 +148,8 @@ export default {
         require(`@/assets/${this.frameDir}/${fn}`)
       );
     },
-    dates() {
-      return this.frameFileNames.map(fn => fn.split("_")[0]);
+    labels() {
+      return this.frameFileNames.map(fn => fn.split("_")[0].slice(0, 4));
     }
   }
 };

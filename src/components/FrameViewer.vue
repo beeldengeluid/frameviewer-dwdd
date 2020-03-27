@@ -49,7 +49,7 @@ export default {
   props: {
     frameLine: { type: String, required: false },
     frames: { type: Array, required: true },
-    dates: { type: Array, required: false },
+    labels: { type: Array, required: false },
     thumbnailWidth: { type: Number, required: true },
     thumbnailAspectRatio: { type: Number, default: 4 / 3 },
     slitWidthCustom: { type: undefined, required: false }
@@ -94,8 +94,8 @@ export default {
       this.thumbnailSrc = this.frames[activeIndex];
     },
     setThumbnailDate(activeIndex) {
-      if (this.dates) {
-        this.thumbnailDate = this.dates[activeIndex];
+      if (this.labels) {
+        this.thumbnailDate = this.labels[activeIndex];
       }
     },
     moveThumbnail(offsetX) {
