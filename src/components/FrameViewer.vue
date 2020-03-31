@@ -121,6 +121,7 @@ export default {
   transition: opacity 0.2s, z-index 0.2s;
   background-size: cover;
   background-position: center;
+  background-color: rgba(28, 28, 28, 0.9);
   border: solid rgba(28, 28, 28, 0.9) 3px;
   border-radius: 3px;
   z-index: -1;
